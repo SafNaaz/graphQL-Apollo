@@ -28,7 +28,7 @@ var authors = [
 
 const BookType = new GraphQLObjectType({
     name : 'Book',
-    fields : ()=>({
+    fields : ()=>({  // this is a function to resolve the code reachability issue
         id:{type:GraphQLID},
         name:{type:GraphQLString},
         genre:{type:GraphQLString},
@@ -67,11 +67,23 @@ const RootQuery = new GraphQLObjectType({
                 return _.find(books,{id :args.id})
             }
         },
+        books:{
+            type: new GraphQLList(BookType),
+            resolve(parent, args){
+                return books
+            }
+        },
         author:{
             type: AuthorType,
             args:{id:{type: GraphQLID}},
             resolve(parent, args){
                 return _.find(authors, {id:args.id})
+            }
+        },
+        authors:{
+            type: new GraphQLList(AuthorType),
+            resolve(parent, args){
+                return authors;
             }
         }
     }
